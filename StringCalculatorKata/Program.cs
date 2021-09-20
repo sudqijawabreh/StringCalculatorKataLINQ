@@ -47,20 +47,24 @@ namespace StringCalculatorKata
         }
         public static int Add(string input)
         {
-            var delimiter = ',';
+            var delimiter = ",";
             var sum = 0;
-            var numberStrings = new List<string>(); 
+            var numberStrings = new List<string>();
+            var numbersText = string.Empty;
+
             if (input.StartsWith("//"))
             {
                 var firstLine = input.Substring(2).TakeWhile(ch => ch != '\n');
-                delimiter = firstLine.First();
-                numberStrings = input.Substring(2 + firstLine.Count() + 1).Split(delimiter, '\n').ToList();
+                delimiter = string.Join("",firstLine.Where(ch => ch != '[' && ch != ']'));
+                numbersText = input.Substring(2 + firstLine.Count() + 1);
             }
             else
             {
-                numberStrings = input.Split(delimiter, '\n').ToList();
+                numbersText = input;
             }
 
+            var delimiters = new string[] { delimiter, "\n" };
+            numberStrings = numbersText.Split(delimiters, StringSplitOptions.None).ToList();
             var numbers = numberStrings.Select(n => int.Parse(n));
             var negatives = numbers.Where(n => n < 0);
             var positives = numbers.Where(n => n >= 0 && n < 1000);
@@ -86,6 +90,12 @@ namespace StringCalculatorKata
             AssertThrowExceptionWithMessage(() => Add("1,-2,-23"), "negatives not allowed: -2,-23");
 
             AssertTrue(Add("//;\n25;30;1000") == 55);
+
+            AssertTrue(Add("//;\n25;30;1000") == 55);
+
+            AssertTrue(Add("//[;;]\n25;;30") == 55);
+            AssertTrue(Add("//[***]\n25***30") == 55);
+            AssertTrue(Add("//[***]\n20***30\n50") == 100);
             //AssertTrue(Add("1,23") == 24);
             Console.WriteLine("Hello World!");
         }
