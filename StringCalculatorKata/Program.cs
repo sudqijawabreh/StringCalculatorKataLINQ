@@ -104,6 +104,7 @@ namespace StringCalculatorKata
         }
         static void Main(string[] args)
         {
+            //https://kata-log.rocks/string-calculator-kata
             // simple unit testing mechanisim
             // if now exception happend then all passed
 
