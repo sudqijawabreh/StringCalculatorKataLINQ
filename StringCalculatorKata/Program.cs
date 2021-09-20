@@ -63,7 +63,7 @@ namespace StringCalculatorKata
 
             var numbers = numberStrings.Select(n => int.Parse(n));
             var negatives = numbers.Where(n => n < 0);
-            var positives = numbers.Where(n => n >= 0);
+            var positives = numbers.Where(n => n >= 0 && n < 1000);
 
             if (negatives.Any())
                 throw new Exception($"negatives not allowed: {string.Join(",", negatives)}");
@@ -84,6 +84,8 @@ namespace StringCalculatorKata
             AssertTrue(Add("//;\n25;30\n60") == 115);
 
             AssertThrowExceptionWithMessage(() => Add("1,-2,-23"), "negatives not allowed: -2,-23");
+
+            AssertTrue(Add("//;\n25;30;1000") == 55);
             //AssertTrue(Add("1,23") == 24);
             Console.WriteLine("Hello World!");
         }
