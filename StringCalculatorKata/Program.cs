@@ -28,7 +28,18 @@ namespace StringCalculatorKata
         }
         public static int Add(string input)
         {
-            var sum = input.Split(',','\n').Select(n => int.Parse(n)).Sum();
+            var delimiter = ',';
+            var sum = 0;
+            if (input.StartsWith("//"))
+            {
+                var firstLine = input.Substring(2).TakeWhile(ch => ch != '\n');
+                delimiter = firstLine.First();
+                sum = input.Substring(2 + firstLine.Count() + 1).Split(delimiter, '\n').Select(n => int.Parse(n)).Sum();
+            }
+            else
+            {
+                sum = input.Split(delimiter, '\n').Select(n => int.Parse(n)).Sum();
+            }
             return sum;
         }
         static void Main(string[] args)
@@ -38,6 +49,11 @@ namespace StringCalculatorKata
 
             AssertTrue(Add("10\n20,30") == 60);
             AssertThrowException(() => Add("1,\n23"));
+
+            AssertTrue(Add("//;\n1;2") == 3);
+            AssertTrue(Add("//;\n25;30;60") == 115);
+            AssertTrue(Add("//;\n25;30\n60") == 115);
+            //AssertTrue(Add("1,23") == 24);
             Console.WriteLine("Hello World!");
         }
     }
